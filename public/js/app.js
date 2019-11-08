@@ -66302,6 +66302,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
 
 
 
@@ -66320,6 +66322,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             users: null
         };
     },
+
     methods: {
         connectToChatkit: function connectToChatkit() {
             var _this = this;
@@ -66336,6 +66339,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 _this.currentUser = user;
                 _this.subscribeToRoom();
                 console.log('Connected Successfully');
+                // this.currentUser.enablePushNotifications()
+                //   .then(() => {
+                // console.log('Push Notifications enabled');
+                //   })
+                _this.currentUser.enablePushNotifications().then(function () {
+                    console.log('Push Notifications enabled');
+                });
             }).catch(function (error) {
                 console.log('Error on connection', error);
             });
@@ -66382,6 +66392,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
                         return onUserJoined;
                     }()
+
                 },
                 messageLimit: 0
             });
@@ -66390,7 +66401,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
             var _this3 = this;
 
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("http://localhost:9001" + '/api/users').then(function (res) {
-                _this3.users = res['data']['body'][0];
+                _this3.users = res['data']['body'];
             });
         },
         sendMessage: function sendMessage() {
@@ -66402,6 +66413,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 room: this.roomId,
                 message: this.message
             }).then(function (message) {
+                _this4.currentUser.setReadCursor({
+                    roomId: _this4.roomId,
+                    position: message.data.body.message_id
+                });
+
                 _this4.message = '';
             });
         },

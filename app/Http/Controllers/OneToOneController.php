@@ -118,19 +118,25 @@ class OneToOneController extends Controller
     }
 
     public function users(){
-     $userdata = $this->chatkit->getUsersById([
+            $userdata = $this->chatkit->getUsersById([
          'user_ids' => "bgt3h",
      ]);
-      return $this->chatkit->getReadCursorsForUser(['user_id'=>'bgt3h']);
-     return  $this->chatkit->setReadCursor([
-        'user_id' => 'bgt3h',
-        'room_id' => '978d081e-9080-41a5-bc8d-80f8e1bf4a9b',
-        'position' => 102612569
-      ]);
-      return $this->chatkit->getReadCursor([
-        'user_id' => 'hbgt3ham',
-        'room_id' => '978d081e-9080-41a5-bc8d-80f8e1bf4a9b',
-      ]);
+     $name = $userdata['body'];
+      $name[0]['name'];
+    //   return $this->chatkit->getReadCursorsForUser(['user_id'=>'bgt3h']);
+    //  return  $this->chatkit->setReadCursor([
+    //     'user_id' => 'bgt3h',
+    //     'room_id' => '978d081e-9080-41a5-bc8d-80f8e1bf4a9b',
+    //     'position' => 102612569
+    //   ]);
+    // dd($this->chatkit->getRoom([ 'id' => '978d081e-9080-41a5-bc8d-80f8e1bf4a9b' ]));
+    //    $this->chatkit->getReadCursor([
+    //     'user_id' => 'nym20',
+    //     'room_id' => 'fb237eff-9669-471a-914d-bca5f69bcf5a',
+    //   ]);
+    $roomdata = $this->chatkit->getUserRooms([ 'id' => Auth::user()->chatkit_id ]);
+        dd($roomdata['body']);
+     return $this->chatkit->getUserRooms([ 'id' => 'nym20' ]);
     // dd($userdata);
     }
 }

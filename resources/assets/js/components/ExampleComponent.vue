@@ -5,6 +5,8 @@
         <dl v-for="message in messages" :key="message.id">
                <dt v-if="message.id"><i> ({{ formatTime(message.timestamp) }}) </i> : <strong>{{ message.senderId }}</strong></dt>
                 <dd>{{ message.text }}</dd>
+              
+ 
         </dl>
     </div>
      
@@ -28,7 +30,7 @@
             userId: String,
             initialMessages: Array,
         },
-        data : function(){
+        data () {
             return {
                 currentUser: null,
                 message: '',
@@ -51,6 +53,14 @@
                         this.currentUser = user;
                         this.subscribeToRoom();
                         console.log('Connected Successfully')
+                        // this.currentUser.enablePushNotifications()
+                        //   .then(() => {
+                        // console.log('Push Notifications enabled');
+                        //   })
+                        this.currentUser.enablePushNotifications()
+                          .then(() => {
+                           console.log('Push Notifications enabled');
+                          })
                     })
                     .catch(error => {
                             console.log('Error on connection', error)
@@ -72,16 +82,18 @@
                             await this.getUsers()
                             this.messages.push({
                                 text: `${user.name} joined ${this.formatTime(user.created_at)}`
-                            })
+                            })  
                         },
+                        
                     },
                     messageLimit: 0
                 })
             },
+           
             getUsers() {
                 axios.get(`${process.env.MIX_APP_URL}/api/users`)
                     .then(res => {
-                        this.users = res['data']['body'][0]
+                        this.users = res['data']['body']
                     }); 
             },
             sendMessage() {
@@ -90,8 +102,14 @@
                     user: this.userId,
                     room: this.roomId,
                     message: this.message
-                })
+                }) 
+                
                 .then(message => {
+                    this.currentUser.setReadCursor({
+                      roomId: this.roomId,
+                      position: message.data.body.message_id
+                   }) 
+                  
                     this.message = ''
                 });
             },

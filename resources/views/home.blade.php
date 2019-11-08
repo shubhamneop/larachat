@@ -13,6 +13,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                  <div class="user" style="float:left">
                     @foreach($users as $user)
                     <a class="dropdown-item" href="{{ route('privatechat') }}" onclick="event.preventDefault();
                              document.getElementById('{{$user->chatkit_id}}').submit();">
@@ -41,7 +42,19 @@
                      
 
                     @endforeach  -->
-                    @endforeach                    
+                    @endforeach  
+                    </div>
+                    <div class="user">
+                    <!-- @if($usersCount>$roomcount)
+                    -
+                    @endif 
+                    @foreach($userrooms['body'] as $userroom)
+                    @if($userroom['private']==true)
+                     <p> {{$userroom['unread_count']}}</p>
+                     @endif
+                     @endforeach   -->
+                     
+                     </div>                
                 </div>
             </div>
         </div>
@@ -75,6 +88,9 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @foreach($userrooms['body'] as $userroom)
+                     {{$userroom['unread_count']}}
+                     @endforeach 
 
                      <!-- <form id="{{$room['id']}}" action="{{ route('creategroupchat') }}" method="POST">
                             @csrf

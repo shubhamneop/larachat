@@ -30,26 +30,23 @@ class HomeController extends Controller
         $id = Auth::user()->id;
 
         $users = User::orderBy('id','DESC')->where('id','!=',$id)->get();
+        $usersCount = User::orderBy('id','DESC')->where('id','!=',$id)->count();
         foreach($users as $user){
             $chatkit[] = $user->chatkit_id;
         }
          $data = User::find($id);
         $userrooms = $this->chatkit->getUserRooms(['id'=>$data->chatkit_id]);
+           $roomcount=0;
+        foreach($userrooms['body'] as $value){
+            if($value['private']==true){
+              $roomcount++;
+            }
+
+        }
+
         $rooms = $this->chatkit->getRooms([]);
         
-        $allroom = $this->chatkit->getRooms(['include_private'=>true]);
-        foreach($allroom['body'] as $room){
-           $roomdetails[] = $this->chatkit->getRoom(['id'=> $room['id']]); 
-         }
-        foreach($roomdetails as $demo){
-            $memberoom[]=$demo['body'];
-         }
-         foreach($memberoom as $member){
-            if(in_array("czfwl",$member['member_user_ids']) && in_array("bgt3h",$member['member_user_ids']) ){
-                // return $member['id'];
-            }
-            
-        }
+
         
         // dd($rooms['body']); 
     //     foreach($rooms['body'] as $userroom){
@@ -58,6 +55,6 @@ class HomeController extends Controller
     //     dd($private);
     //    dd($userrooms);
 
-    return view('home',compact('users','userrooms','rooms','chatkit'));
+    return view('home',compact('users','userrooms','rooms','roomcount','usersCount'));
     }
 }
